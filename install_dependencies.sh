@@ -11,3 +11,5 @@ pip install nltk
 pip install numpy
 pip install sklearn
 pip install torch-scatter -f https://data.pyg.org/whl/torch-${TORCH_VERSION}+${CUDA_VERSION}.html
+
+pip install torch==1.12.1 --extra-index-url https://download.pytorch.org/whl/cu113

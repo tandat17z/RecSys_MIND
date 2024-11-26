@@ -23,17 +23,27 @@ pat = re.compile(r"[\w]+|[.,!?;|]")
 class MIND_Corpus:
     @staticmethod
     def preprocess(config: Config):
-        user_ID_file = 'user_ID-%s.json' % config.dataset
-        news_ID_file = 'news_ID-%s.json' % config.dataset
-        category_file = 'category-%s.json' % config.dataset
-        subCategory_file = 'subCategory-%s.json' % config.dataset
-        vocabulary_file = 'vocabulary-' + str(config.word_threshold) + '-' + config.tokenizer + '-' + str(config.max_title_length) + '-' + str(config.max_abstract_length) + '-' + config.dataset + '.json'
-        word_embedding_file = 'word_embedding-' + str(config.word_threshold) + '-' + str(config.word_embedding_dim) + '-' + config.tokenizer + '-' + str(config.max_title_length) + '-' + str(config.max_abstract_length) + '-' + config.dataset + '.pkl'
-        entity_file = 'entity-%s.json' % config.dataset
-        entity_embedding_file = 'entity_embedding-%s.pkl' % config.dataset
-        context_embedding_file = 'context_embedding-%s.pkl' % config.dataset
-        user_history_graph_file = 'user_history_graph-' + str(config.max_history_num) + ('' if config.no_self_connection else '-self') + ('' if config.no_adjacent_normalization else '-normalize-' + config.gcn_normalization_type) + '-' + config.dataset + '.pkl'
-        preprocessed_data_files = [user_ID_file, news_ID_file, category_file, subCategory_file, vocabulary_file, word_embedding_file, entity_file, entity_embedding_file, context_embedding_file, user_history_graph_file]
+        user_ID_file = 'cospus/user_ID-%s.json' % config.dataset
+        news_ID_file = 'cospus/news_ID-%s.json' % config.dataset
+        category_file = 'cospus/category-%s.json' % config.dataset
+        subCategory_file = 'cospus/subCategory-%s.json' % config.dataset
+        vocabulary_file = 'cospus/vocabulary-' + str(config.word_threshold) + '-' + config.tokenizer + '-' + str(config.max_title_length) + '-' + str(config.max_abstract_length) + '-' + config.dataset + '.json'
+        word_embedding_file = 'cospus/word_embedding-' + str(config.word_threshold) + '-' + str(config.word_embedding_dim) + '-' + config.tokenizer + '-' + str(config.max_title_length) + '-' + str(config.max_abstract_length) + '-' + config.dataset + '.pkl'
+        entity_file = 'cospus/entity-%s.json' % config.dataset
+        entity_embedding_file = 'cospus/entity_embedding-%s.pkl' % config.dataset
+        context_embedding_file = 'cospus/context_embedding-%s.pkl' % config.dataset
+        user_history_graph_file = 'cospus/user_history_graph-' + str(config.max_history_num) + ('' if config.no_self_connection else '-self') + ('' if config.no_adjacent_normalization else '-normalize-' + config.gcn_normalization_type) + '-' + config.dataset + '.pkl'
+        
+        preprocessed_data_files = [
+            user_ID_file, news_ID_file, 
+            category_file, subCategory_file, 
+            vocabulary_file, 
+            word_embedding_file, 
+            entity_file, 
+            entity_embedding_file, 
+            context_embedding_file, 
+            user_history_graph_file
+        ]
 
         if not all(list(map(os.path.exists, preprocessed_data_files))):
             user_ID_dict = {'<UNK>': 0}
@@ -46,6 +56,7 @@ class MIND_Corpus:
             news_category_dict = {}
 
             # 1. user ID dictionay
+            print("1. user ID dictionary")
             with open(os.path.join(config.train_root, 'behaviors.tsv'), 'r', encoding='utf-8') as train_behaviors_f:
                 for line in train_behaviors_f:
                     impression_ID, user_ID, time, history, impressions = line.split('\t')
@@ -55,6 +66,7 @@ class MIND_Corpus:
                     json.dump(user_ID_dict, user_ID_f)
 
             # 2. news ID dictionay & news category dictionay & news subCategory dictionay
+            print("2. news ID dictionay & news category dictionay & news subCategory dictionay")
             for i, prefix in enumerate([config.train_root, config.dev_root, config.test_root]):
                 with open(os.path.join(prefix, 'news.tsv'), 'r', encoding='utf-8') as news_f:
                     for line in news_f:
@@ -102,6 +114,7 @@ class MIND_Corpus:
                 json.dump(subCategory_dict, subCategory_f)
 
             # 3. word dictionay
+            print('3. word dictionay')
             word_counter_list = [[word, word_counter[word]] for word in word_counter]
             word_counter_list.sort(key=lambda x: x[1], reverse=True) # sort by word frequency
             filtered_word_counter_list = list(filter(lambda x: x[1] >= config.word_threshold, word_counter_list))
@@ -111,8 +124,9 @@ class MIND_Corpus:
                 json.dump(word_dict, vocabulary_f)
 
             # 4. Glove word embedding
+            print('4. Glove word embedding')
             if config.word_embedding_dim == 300:
-                glove = GloVe(name='840B', dim=300, cache='../glove', max_vectors=10000000000)
+                glove = GloVe(name='840B', dim=300, cache='../glove', max_vectors=1000000000)
             else:
                 glove = GloVe(name='6B', dim=config.word_embedding_dim, cache='../glove', max_vectors=10000000000)
             glove_stoi = glove.stoi
@@ -132,6 +146,7 @@ class MIND_Corpus:
                 pickle.dump(word_embedding_vectors, word_embedding_f)
 
             # 5. knowledge-graph entity dictionary & eneity embedding & context embedding
+            print('5. knowledge-graph entity dictionary & eneity embedding & context embedding')
             entity_embedding_vectors = torch.zeros([len(entity_dict), config.entity_embedding_dim])
             context_embedding_vectors = torch.zeros([len(entity_dict), config.context_embedding_dim])
             for prefix in [config.train_root, config.dev_root, config.test_root]:
@@ -160,6 +175,7 @@ class MIND_Corpus:
                 pickle.dump(context_embedding_vectors, context_embedding_f)
 
             # 6. user history graph
+            print('6. user history graph')
             category_num = len(category_dict)
             graph_size = config.max_history_num + category_num # graph size of |V_{n}|+|V_{p}|
             prefix_mode = ['train', 'dev', 'test']
@@ -223,25 +239,27 @@ class MIND_Corpus:
     def __init__(self, config: Config):
         # preprocess data
         MIND_Corpus.preprocess(config)
-        with open('user_ID-%s.json' % config.dataset, 'r', encoding='utf-8') as user_ID_f:
+
+        print("--- finish preprocess---")
+        with open('cospus/user_ID-%s.json' % config.dataset, 'r', encoding='utf-8') as user_ID_f:
             self.user_ID_dict = json.load(user_ID_f)
             config.user_num = len(self.user_ID_dict)
-        with open('news_ID-%s.json' % config.dataset, 'r', encoding='utf-8') as news_ID_f:
+        with open('cospus/news_ID-%s.json' % config.dataset, 'r', encoding='utf-8') as news_ID_f:
             self.news_ID_dict = json.load(news_ID_f)
             self.news_num = len(self.news_ID_dict)
-        with open('category-%s.json' % config.dataset, 'r', encoding='utf-8') as category_f:
+        with open('cospus/category-%s.json' % config.dataset, 'r', encoding='utf-8') as category_f:
             self.category_dict = json.load(category_f)
             config.category_num = len(self.category_dict)
-        with open('subCategory-%s.json' % config.dataset, 'r', encoding='utf-8') as subCategory_f:
+        with open('cospus/subCategory-%s.json' % config.dataset, 'r', encoding='utf-8') as subCategory_f:
             self.subCategory_dict = json.load(subCategory_f)
             config.subCategory_num = len(self.subCategory_dict)
-        with open('vocabulary-' + str(config.word_threshold) + '-' + config.tokenizer + '-' + str(config.max_title_length) + '-' + str(config.max_abstract_length) + '-' + config.dataset + '.json', 'r', encoding='utf-8') as vocabulary_f:
+        with open('cospus/vocabulary-' + str(config.word_threshold) + '-' + config.tokenizer + '-' + str(config.max_title_length) + '-' + str(config.max_abstract_length) + '-' + config.dataset + '.json', 'r', encoding='utf-8') as vocabulary_f:
             self.word_dict = json.load(vocabulary_f)
             config.vocabulary_size = len(self.word_dict)
-        with open('entity-%s.json' % config.dataset, 'r', encoding='utf-8') as entity_f:
+        with open('cospus/entity-%s.json' % config.dataset, 'r', encoding='utf-8') as entity_f:
             self.entity_dict = json.load(entity_f)
             config.entity_size = len(self.entity_dict)
-        with open('user_history_graph-' + str(config.max_history_num) + ('' if config.no_self_connection else '-self') + ('' if config.no_adjacent_normalization else '-normalize-' + config.gcn_normalization_type) + '-' + config.dataset + '.pkl', 'rb') as user_history_graph_f:
+        with open('cospus/user_history_graph-' + str(config.max_history_num) + ('' if config.no_self_connection else '-self') + ('' if config.no_adjacent_normalization else '-normalize-' + config.gcn_normalization_type) + '-' + config.dataset + '.pkl', 'rb') as user_history_graph_f:
             user_history_data = pickle.load(user_history_graph_f)
             self.train_user_history_graph = user_history_data['train_user_history_graph']
             self.train_user_history_category_mask = user_history_data['train_user_history_category_mask']

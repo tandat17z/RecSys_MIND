@@ -22,7 +22,7 @@ class Config:
         parser.add_argument('--seed', type=int, default=0, help='Seed for random number generator')
         parser.add_argument('--config_file', type=str, default='', help='Config file path')
         # Dataset config
-        parser.add_argument('--dataset', type=str, default='200k', choices=['200k', 'small', 'large'], help='Dataset type')
+        parser.add_argument('--dataset', type=str, default='small', choices=['200k', 'small', 'large'], help='Dataset type')
         parser.add_argument('--tokenizer', type=str, default='MIND', choices=['MIND', 'NLTK'], help='Sentence tokenizer')
         parser.add_argument('--word_threshold', type=int, default=3, help='Word threshold')
         parser.add_argument('--max_title_length', type=int, default=32, help='Sentence truncate length for title')
@@ -178,7 +178,7 @@ class Config:
     def __init__(self):
         self.parse_argument()
         self.preliminary_setup()
-        self.set_cuda()
+        # self.set_cuda()
 
 
 if __name__ == '__main__':

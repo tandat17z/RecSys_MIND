@@ -12,27 +12,27 @@ MIND_large_dataset_root = '../MIND-large'
 MIND_200k_dataset_root = '../MIND-200k'
 
 
-def download_extract_MIND_small():
-    if not os.path.exists(MIND_small_dataset_root):
-        os.mkdir(MIND_small_dataset_root)
-    if not os.path.exists(MIND_small_dataset_root + '/download'):
-        os.mkdir(MIND_small_dataset_root + '/download')
-    if not os.path.exists(MIND_small_dataset_root + '/download/train'):
-        if not os.path.exists(MIND_small_dataset_root + '/download/MINDsmall_train.zip'):
-            os.system('wget https://mind201910small.blob.core.windows.net/release/MINDsmall_train.zip -P %s/download' % MIND_small_dataset_root)
-        assert os.path.exists(MIND_small_dataset_root + '/download/MINDsmall_train.zip'), 'Train set zip not found'
-        os.mkdir(MIND_small_dataset_root + '/download/train')
-        os.system('unzip %s/download/MINDsmall_train.zip -d %s/download/train' % (MIND_small_dataset_root, MIND_small_dataset_root))
-    if not os.path.exists(MIND_small_dataset_root + '/download/dev'):
-        if not os.path.exists(MIND_small_dataset_root + '/download/MINDsmall_dev.zip'):
-            os.system('wget https://mind201910small.blob.core.windows.net/release/MINDsmall_dev.zip -P %s/download' % MIND_small_dataset_root)
-        assert os.path.exists(MIND_small_dataset_root + '/download/MINDsmall_dev.zip'), 'Dev set zip not found'
-        os.mkdir(MIND_small_dataset_root + '/download/dev')
-        os.system('unzip %s/download/MINDsmall_dev.zip -d %s/download/dev' % (MIND_small_dataset_root, MIND_small_dataset_root))
-    if not os.path.exists(MIND_small_dataset_root + '/download/wikidata-graph'):
-        if not os.path.exists(MIND_small_dataset_root + '/download/wikidata-graph.zip'):
-            os.system('wget https://mind201910.blob.core.windows.net/knowledge-graph/wikidata-graph.zip -P %s/download' % MIND_small_dataset_root)
-        os.system('unzip %s/download/wikidata-graph.zip -d %s/download' % (MIND_small_dataset_root, MIND_small_dataset_root))
+# def download_extract_MIND_small():
+#     if not os.path.exists(MIND_small_dataset_root):
+#         os.mkdir(MIND_small_dataset_root)
+#     if not os.path.exists(MIND_small_dataset_root + '/download'):
+#         os.mkdir(MIND_small_dataset_root + '/download')
+#     if not os.path.exists(MIND_small_dataset_root + '/download/train'):
+#         if not os.path.exists(MIND_small_dataset_root + '/download/MINDsmall_train.zip'):
+#             os.system('wget https://mind201910small.blob.core.windows.net/release/MINDsmall_train.zip -P %s/download' % MIND_small_dataset_root)
+#         assert os.path.exists(MIND_small_dataset_root + '/download/MINDsmall_train.zip'), 'Train set zip not found'
+#         os.mkdir(MIND_small_dataset_root + '/download/train')
+#         os.system('unzip %s/download/MINDsmall_train.zip -d %s/download/train' % (MIND_small_dataset_root, MIND_small_dataset_root))
+#     if not os.path.exists(MIND_small_dataset_root + '/download/dev'):
+#         if not os.path.exists(MIND_small_dataset_root + '/download/MINDsmall_dev.zip'):
+#             os.system('wget https://mind201910small.blob.core.windows.net/release/MINDsmall_dev.zip -P %s/download' % MIND_small_dataset_root)
+#         assert os.path.exists(MIND_small_dataset_root + '/download/MINDsmall_dev.zip'), 'Dev set zip not found'
+#         os.mkdir(MIND_small_dataset_root + '/download/dev')
+#         os.system('unzip %s/download/MINDsmall_dev.zip -d %s/download/dev' % (MIND_small_dataset_root, MIND_small_dataset_root))
+#     if not os.path.exists(MIND_small_dataset_root + '/download/wikidata-graph'):
+#         if not os.path.exists(MIND_small_dataset_root + '/download/wikidata-graph.zip'):
+#             os.system('wget https://mind201910.blob.core.windows.net/knowledge-graph/wikidata-graph.zip -P %s/download' % MIND_small_dataset_root)
+#         os.system('unzip %s/download/wikidata-graph.zip -d %s/download' % (MIND_small_dataset_root, MIND_small_dataset_root))
 
 
 def download_extract_MIND_large(mode):
@@ -53,28 +53,31 @@ def download_extract_MIND_large(mode):
     if (not os.path.exists(dataset_root + '/train/news.tsv') or not os.path.exists(dataset_root + '/train/behaviors.tsv') or not os.path.exists(dataset_root + '/train/entity_embedding.vec')) and \
         not os.path.exists(dataset_root + '/download/train'):
         if not os.path.exists(dataset_root + '/download/MINDlarge_train.zip'):
-            os.system('wget https://mind201910small.blob.core.windows.net/release/MINDlarge_train.zip -P %s/download' % dataset_root)
+            print("add dataset")
+            # os.system('wget https://mind201910small.blob.core.windows.net/release/MINDlarge_train.zip -P %s/download' % dataset_root)
         assert os.path.exists(dataset_root + '/download/MINDlarge_train.zip'), 'Train set zip not found'
         os.mkdir(dataset_root + '/download/train')
         os.system('unzip %s/download/MINDlarge_train.zip -d %s/download/train' % (dataset_root, dataset_root))
     if (not os.path.exists(dataset_root + '/dev/news.tsv') or not os.path.exists(dataset_root + '/dev/behaviors.tsv') or not os.path.exists(dataset_root + '/dev/entity_embedding.vec')) and \
         not os.path.exists(dataset_root + '/download/dev'):
         if not os.path.exists(dataset_root + '/download/MINDlarge_dev.zip'):
-            os.system('wget https://mind201910small.blob.core.windows.net/release/MINDlarge_dev.zip -P %s/download' % dataset_root)
+            print("add dataset")
+            # os.system('wget https://mind201910small.blob.core.windows.net/release/MINDlarge_dev.zip -P %s/download' % dataset_root)
         assert os.path.exists(dataset_root + '/download/MINDlarge_dev.zip'), 'Dev set zip not found'
         os.mkdir(dataset_root + '/download/dev')
         os.system('unzip %s/download/MINDlarge_dev.zip -d %s/download/dev' % (dataset_root, dataset_root))
     if (not os.path.exists(dataset_root + '/test/news.tsv') or not os.path.exists(dataset_root + '/test/behaviors.tsv') or not os.path.exists(dataset_root + '/test/entity_embedding.vec')) and \
         not os.path.exists(dataset_root + '/download/test'):
         if not os.path.exists(dataset_root + '/download/MINDlarge_test.zip'):
-            os.system('wget https://mind201910small.blob.core.windows.net/release/MINDlarge_test.zip -P %s/download' % dataset_root)
+            print("add dataset")
+            # os.system('wget https://mind201910small.blob.core.windows.net/release/MINDlarge_test.zip -P %s/download' % dataset_root)
         assert os.path.exists(dataset_root + '/download/MINDlarge_test.zip'), 'Test set zip not found'
         os.mkdir(dataset_root + '/download/test')
         os.system('unzip %s/download/MINDlarge_test.zip -d %s/download/test' % (dataset_root, dataset_root))
-    if not os.path.exists(dataset_root + '/download/wikidata-graph'):
-        if not os.path.exists(dataset_root + '/download/wikidata-graph.zip'):
-            os.system('wget https://mind201910.blob.core.windows.net/knowledge-graph/wikidata-graph.zip -P %s/download' % dataset_root)
-        os.system('unzip %s/download/wikidata-graph.zip -d %s/download' % (dataset_root, dataset_root))
+    # if not os.path.exists(dataset_root + '/download/wikidata-graph'):
+    #     if not os.path.exists(dataset_root + '/download/wikidata-graph.zip'):
+    #         os.system('wget https://mind201910.blob.core.windows.net/knowledge-graph/wikidata-graph.zip -P %s/download' % dataset_root)
+    #     os.system('unzip %s/download/wikidata-graph.zip -d %s/download' % (dataset_root, dataset_root))
     if mode == 'large':
         for data in ['train', 'dev', 'test']:
             if not os.path.exists('../MIND-large/%s/news.tsv' % data):
@@ -226,13 +229,17 @@ def generate_knowledge_entity_embedding(data_mode):
                     terms = line.strip().split('\t')
                     assert len(terms) == 101
                     entity_embeddings[terms[0]] = list(map(float, terms[1:]))
+    print("1. finish read: /entity_embedding_files")
+
     entity_embedding_relation = collections.defaultdict(set)
-    with open('../MIND-%s/download/wikidata-graph/wikidata-graph.tsv' % data_mode, 'r', encoding='utf-8') as wikidata_graph_f:
+    with open('../MIND-%s/download/wikidata-graph/wikidata-graph.txt' % data_mode, 'r', encoding='utf-8') as wikidata_graph_f:
         for line in wikidata_graph_f:
             if len(line.strip()) > 0:
                 terms = line.strip().split('\t')
                 entity_embedding_relation[terms[0]].add(terms[2])
                 entity_embedding_relation[terms[2]].add(terms[0])
+    print("2. finish read: /wikidata-graph.txt")
+
     context_embeddings = {}
     for entity in entity_embeddings:
         entity_embedding = entity_embeddings[entity]
@@ -247,6 +254,8 @@ def generate_knowledge_entity_embedding(data_mode):
         for i in range(100):
             context_embedding[i] /= cnt
         context_embeddings[entity] = context_embedding
+    print('3. context_embeddings')
+
     for mode in ['train', 'dev', 'test']:
         with open('../MIND-%s/%s/entity_embedding.vec' % (data_mode, mode), 'r', encoding='utf-8') as entity_embedding_f:
             with open('../MIND-%s/%s/context_embedding.vec' % (data_mode, mode), 'w', encoding='utf-8') as context_embedding_f:
@@ -254,17 +263,17 @@ def generate_knowledge_entity_embedding(data_mode):
                     if len(line.strip()) > 0:
                         entity = line.split('\t')[0]
                         context_embedding_f.write(entity + '\t' + '\t'.join(list(map(str, context_embeddings[entity]))) + '\n')
-
+    print('4. end generate knowledge entity embedding')
 
 def prepare_MIND_small():
-    download_extract_MIND_small()
+    # download_extract_MIND_small()
     preprocess_MIND_small()
     generate_knowledge_entity_embedding('small')
 
 
 def prepare_MIND_large():
     download_extract_MIND_large('large')
-    generate_knowledge_entity_embedding('large')
+    # generate_knowledge_entity_embedding('large')
 
 
 def prepare_MIND_200k():
@@ -275,5 +284,5 @@ def prepare_MIND_200k():
 
 if __name__ == '__main__':
     prepare_MIND_small()
-    prepare_MIND_large()
-    prepare_MIND_200k()
+    # prepare_MIND_large()
+    # prepare_MIND_200k()

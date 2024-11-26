@@ -20,3 +20,6 @@
 /prediction
 /__pycache__
 /.vscode
+/cospus
+/cospus/*.json
+/cospus.zip
