@@ -78,7 +78,7 @@ def test(config: Config, mind_corpus: MIND_Corpus):
 if __name__ == '__main__':
     config = Config()
     mind_corpus = MIND_Corpus(config)
-    print("end main")
+    print("-->> finish MIND_Corpus --> begin: ")
     if config.mode == 'train':
         train(config, mind_corpus)
         config.test_model_path = config.best_model_dir + '/#' + str(config.run_index) + '/' + config.news_encoder + '-' + config.user_encoder

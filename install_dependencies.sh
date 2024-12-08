@@ -10,6 +10,4 @@ pip install torchtext==${TORCHTEXT_VERSION} --extra-index-url https://download.p
 pip install nltk
 pip install numpy
 pip install sklearn
-pip install torch-scatter -f https://data.pyg.org/whl/torch-${TORCH_VERSION}+${CUDA_VERSION}.html
-
-pip install torch==1.12.1 --extra-index-url https://download.pytorch.org/whl/cu113
+pip install torch-scatter==2.1.0+pt112cu113 -f https://data.pyg.org/whl/torch-1.12.1+cu113.html

@@ -78,8 +78,13 @@ class Trainer:
             train_dataloader = DataLoader(self.train_dataset, batch_size=self.batch_size, shuffle=True, num_workers=self.batch_size // 16, pin_memory=True)
             model.train()
             epoch_loss = 0
-            for (user_ID, user_category, user_subCategory, user_title_text, user_title_mask, user_title_entity, user_content_text, user_content_mask, user_content_entity, user_history_mask, user_history_graph, user_history_category_mask, user_history_category_indices, \
-                news_category, news_subCategory, news_title_text, news_title_mask, news_title_entity, news_content_text, news_content_mask, news_content_entity) in train_dataloader:
+            for batch in tqdm(train_dataloader, desc="Training Progress", unit="batch"):
+                # Giải nén các thành phần trong batch
+                (user_ID, user_category, user_subCategory, user_title_text, user_title_mask, user_title_entity, 
+                user_content_text, user_content_mask, user_content_entity, user_history_mask, user_history_graph, 
+                user_history_category_mask, user_history_category_indices, news_category, news_subCategory, 
+                news_title_text, news_title_mask, news_title_entity, news_content_text, news_content_mask, 
+                news_content_entity) = batch
                 user_ID = user_ID.cuda(non_blocking=True)                                                                                                                       # [batch_size]
                 user_category = user_category.cuda(non_blocking=True)                                                                                                           # [batch_size, max_history_num]
                 user_subCategory = user_subCategory.cuda(non_blocking=True)                                                                                                     # [batch_size, max_history_num]
@@ -100,8 +105,7 @@ class Trainer:
                 news_title_entity = news_title_entity.cuda(non_blocking=True)                                                                                                   # [batch_size, 1 + negative_sample_num, max_title_length]
                 news_content_text = news_content_text.cuda(non_blocking=True)                                                                                                   # [batch_size, 1 + negative_sample_num, max_content_length]
                 news_content_mask = news_content_mask.cuda(non_blocking=True)                                                                                                   # [batch_size, 1 + negative_sample_num, max_content_length]
-                news_content_entity = news_content_entity.cuda(non_blocking=True)                                                                                               # [batch_size, 1 + negative_sample_num, max_content_length]
-
+                news_content_entity = news_content_entity.cuda(non_blocking=True)   
                 logits = model(user_ID, user_category, user_subCategory, user_title_text, user_title_mask, user_title_entity, user_content_text, user_content_mask, user_content_entity, user_history_mask, user_history_graph, user_history_category_mask, user_history_category_indices, \
                                news_category, news_subCategory, news_title_text, news_title_mask, news_title_entity, news_content_text, news_content_mask, news_content_entity) # [batch_size, 1 + negative_sample_num]
 
