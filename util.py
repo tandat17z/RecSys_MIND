@@ -5,7 +5,7 @@ from MIND_corpus import MIND_Corpus
 from MIND_dataset import MIND_DevTest_Dataset
 from torch.utils.data import DataLoader
 from evaluate import scoring
-
+from tqdm import tqdm
 
 def compute_scores(model: nn.Module, mind_corpus: MIND_Corpus, batch_size: int, mode: str, result_file: str, dataset: str):
     assert mode in ['dev', 'test'], 'mode must be chosen from \'dev\' or \'test\''
@@ -16,8 +16,13 @@ def compute_scores(model: nn.Module, mind_corpus: MIND_Corpus, batch_size: int, 
     torch.cuda.empty_cache()
     model.eval()
     with torch.no_grad():
-        for (user_ID, user_category, user_subCategory, user_title_text, user_title_mask, user_title_entity, user_content_text, user_content_mask, user_content_entity, user_history_mask, user_history_graph, user_history_category_mask, user_history_category_indices, \
-             news_category, news_subCategory, news_title_text, news_title_mask, news_title_entity, news_content_text, news_content_mask, news_content_entity) in dataloader:
+        for batch in tqdm(dataloader, desc="Testing Progress", unit="batch"):
+            # Giải nén các thành phần trong batch
+            (user_ID, user_category, user_subCategory, user_title_text, user_title_mask, user_title_entity, 
+            user_content_text, user_content_mask, user_content_entity, user_history_mask, user_history_graph, 
+            user_history_category_mask, user_history_category_indices, news_category, news_subCategory, 
+            news_title_text, news_title_mask, news_title_entity, news_content_text, news_content_mask, 
+            news_content_entity) = batch
             user_ID = user_ID.cuda(non_blocking=True)
             user_category = user_category.cuda(non_blocking=True)
             user_subCategory = user_subCategory.cuda(non_blocking=True)
