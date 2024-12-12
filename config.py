@@ -15,6 +15,7 @@ class Config:
         parser.add_argument('--mode', type=str, default='train', choices=['train', 'dev', 'test'], help='Mode')
         parser.add_argument('--news_encoder', type=str, default='CNE', choices=['CNE', 'CNN', 'MHSA', 'KCNN', 'HDC', 'NAML', 'PNE', 'DAE', 'Inception', 'NAML_Title', 'NAML_Content', 'CNE_Title', 'CNE_Content', 'CNE_wo_CS', 'CNE_wo_CA'], help='News encoder')
         parser.add_argument('--user_encoder', type=str, default='SUE', choices=['SUE', 'LSTUR', 'MHSA', 'ATT', 'CATT', 'FIM', 'PUE', 'GRU', 'OMAP', 'SUE_wo_GCN', 'SUE_wo_HCA'], help='User encoder')
+        parser.add_argument('--train_model_path', type=str, default='', help='train model path')
         parser.add_argument('--dev_model_path', type=str, default='', help='Dev model path')
         parser.add_argument('--test_model_path', type=str, default='', help='Test model path')
         parser.add_argument('--test_output_file', type=str, default='', help='Specific test output file')
